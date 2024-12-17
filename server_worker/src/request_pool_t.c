@@ -52,7 +52,6 @@ void track_requests(request_pool_t *pool) {
 }
 
 request_pool_errors_t remove_request(request_pool_t *pool, size_t request_index) {
-    printf("\nhere\n");
     int rc = close(pool->requests[request_index].file_fd);
 
     rc = close(pool->requests[request_index].socket_fd);
