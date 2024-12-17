@@ -10,9 +10,11 @@
 #define PORT 8080
 
 #include "server_worker/inc/server_worker_t.h"
+#include "logger/inc/logger.h"
 
-#define MAX_CONNECTIONS 20000
+#define MAX_CONNECTIONS 1024
 #define PROCESSES 4
+
 
 void set_nonblocking(int sockfd) {
     int flags = fcntl(sockfd, F_GETFL, 0);
@@ -24,6 +26,8 @@ int main() {
     int server_fd;
     struct sockaddr_in server_addr;
     socklen_t server_addr_len = sizeof(server_addr);
+
+    init_logger();
 
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd == -1) {
@@ -44,7 +48,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    if (listen(server_fd, 5) == -1) {
+    if (listen(server_fd, MAX_CONNECTIONS) == -1) {
         perror("Listen failed");
         close(server_fd);
         exit(EXIT_FAILURE);
